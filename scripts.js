@@ -1,5 +1,23 @@
 // Create a class for the element
 class NASAArticle extends HTMLElement {
+
+    initAttributes() {
+        const defaultValues = {
+            date: '01-01-1970',
+            explanation: 'Fill in your explanation',
+            hdurl: '',
+            media_type: '',
+            service_version: '',
+            title: 'Title',
+            url: 'Url'
+        };
+        for (let prop in defaultValues) {
+            let value = this.getAttribute(prop);
+            defaultValues[prop] = (value && value.trim()) ? value : defaultValues[prop];
+        }
+        return defaultValues;
+    }
+
     constructor() {
         // Always call super first in constructor
         super();
@@ -7,13 +25,7 @@ class NASAArticle extends HTMLElement {
         // Create a shadow root
         const shadow = this.attachShadow({mode: 'open'});
 
-        const date = this.getAttribute('date');
-        const explanation = this.getAttribute('explanation');
-        const hdurl = this.getAttribute('hdurl');
-        const media_type = this.getAttribute('media_type');
-        const service_version = this.getAttribute('service_version');
-        const title = this.getAttribute('title');
-        const url = this.getAttribute('url');
+        const attributes = this.initAttributes();
 
         // Create spans
         const container = document.createElement('div');
@@ -21,19 +33,19 @@ class NASAArticle extends HTMLElement {
 
         const dateElement = document.createElement('span');
         dateElement.setAttribute('class', 'date');
-        dateElement.innerText = `${date} - ${title}`;
+        dateElement.innerText = `${attributes.date} - ${attributes.title}`;
 
         container.appendChild(dateElement);
 
         const explanationElement = document.createElement('div');
         explanationElement.setAttribute('class', 'explanation');
-        explanationElement.innerText = explanation;
+        explanationElement.innerText = attributes.explanation;
 
         container.appendChild(explanationElement);
 
         const imageElement = document.createElement('img');
         imageElement.setAttribute('class', 'image');
-        imageElement.setAttribute('src', hdurl);
+        imageElement.setAttribute('src', attributes.hdurl);
 
         container.appendChild(imageElement);
 
