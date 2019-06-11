@@ -7,73 +7,55 @@ class NASAArticle extends HTMLElement {
         // Create a shadow root
         const shadow = this.attachShadow({mode: 'open'});
 
+        const date = this.getAttribute('date');
+        const explanation = this.getAttribute('explanation');
+        const hdurl = this.getAttribute('hdurl');
+        const media_type = this.getAttribute('media_type');
+        const service_version = this.getAttribute('service_version');
+        const title = this.getAttribute('title');
+        const url = this.getAttribute('url');
+
         // Create spans
-        const wrapper = document.createElement('span');
-        wrapper.setAttribute('class', 'wrapper');
+        const container = document.createElement('div');
+        container.setAttribute('class', 'container');
 
-        const icon = document.createElement('span');
-        icon.setAttribute('class', 'icon');
-        icon.setAttribute('tabindex', 0);
+        const dateElement = document.createElement('span');
+        dateElement.setAttribute('class', 'date');
+        dateElement.innerText = `${date} - ${title}`;
 
-        const info = document.createElement('span');
-        info.setAttribute('class', 'info');
+        container.appendChild(dateElement);
 
-        // Take attribute content and put it inside the info span
-        const text = this.getAttribute('data-text');
-        info.textContent = text;
+        const explanationElement = document.createElement('div');
+        explanationElement.setAttribute('class', 'explanation');
+        explanationElement.innerText = explanation;
 
-        // Insert icon
-        let imgUrl;
-        if(this.hasAttribute('img')) {
-            imgUrl = this.getAttribute('img');
-        } else {
-            imgUrl = 'img/default.png';
-        }
+        container.appendChild(explanationElement);
 
-        const img = document.createElement('img');
-        img.src = imgUrl;
-        icon.appendChild(img);
+        const imageElement = document.createElement('img');
+        imageElement.setAttribute('class', 'image');
+        imageElement.setAttribute('src', hdurl);
+
+        container.appendChild(imageElement);
 
         // Create some CSS to apply to the shadow dom
         const style = document.createElement('style');
-        console.log(style.isConnected);
 
         style.textContent = `
-      .wrapper {
-        position: relative;
-      }
+        .date {
+          font-size: 1em;
+          display: inline-block;
+          margin-bottom: 20px;
+        }
 
-      .info {
-        font-size: 0.8rem;
-        width: 200px;
-        display: inline-block;
-        border: 1px solid black;
-        padding: 10px;
-        background: white;
-        border-radius: 10px;
-        opacity: 0;
-        transition: 0.6s all;
-        position: absolute;
-        bottom: 20px;
-        left: 10px;
-        z-index: 3;
-      }
-
-      img {
-        width: 1.2rem;
-      }
-
-      .icon:hover + .info, .icon:focus + .info {
-        opacity: 1;
-      }
+        .image {
+          max-width: 100%;
+        }
     `;
 
         // Attach the created elements to the shadow dom
         shadow.appendChild(style);
         console.log(style.isConnected);
-        shadow.appendChild(wrapper);
-        wrapper.appendChild(icon);
-        wrapper.appendChild(info);
+        shadow.appendChild(container);
     }
 }
 
