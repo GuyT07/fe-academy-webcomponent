@@ -26,6 +26,7 @@ class NASAArticle extends HTMLElement {
         const shadow = this.attachShadow({mode: 'open'});
 
         const attributes = this.initAttributes();
+        const hdurl = this.gethdurl();
 
         // Create spans
         const container = document.createElement('div');
@@ -45,7 +46,7 @@ class NASAArticle extends HTMLElement {
 
         const imageElement = document.createElement('img');
         imageElement.setAttribute('class', 'image');
-        imageElement.setAttribute('src', attributes.hdurl);
+        imageElement.setAttribute('src', hdurl);
 
         container.appendChild(imageElement);
 
@@ -69,7 +70,44 @@ class NASAArticle extends HTMLElement {
         console.log(style.isConnected);
         shadow.appendChild(container);
     }
+
+   async gethdurl() {
+      return await getImageBlobUrl()
+    }
 }
 
 // Define the new element
 customElements.define('nasa-article', NASAArticle);
+
+async function getImageBlobUrl() {
+  return fetch( 'https://picsum.photos/4951/3301' )
+  .then( response => {
+    const reader = response.body.getReader();
+
+    return new ReadableStream({
+      async start(controller) {
+        while (true) {
+          const { done, value } = await reader.read();
+          // When no more data needs to be consumed, break the reading
+          if (done) {
+            break;
+          }
+          // Enqueue the next data chunk into our target stream
+          controller.enqueue(value);
+        }
+        // Close the stream
+        controller.close();
+        reader.releaseLock();
+      }
+    })
+  })
+  // Create a new response out of the stream
+  .then(rs => new Response(rs))
+  // Create an object URL for the response
+  .then(response => response.blob())
+  .then(blob => URL.createObjectURL(blob))
+  // Update image
+  //.then(url => image.src = url)
+  // .then(console.log)
+  // .catch(console.error)
+}
