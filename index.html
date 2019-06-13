@@ -1,15 +1,22 @@
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8">
-    <title>THE web component</title>
-</head>
-<body>
-<nasa-article
-        date="2019-06-11"
-        title="Hello, world"
-        explanation="My explanation"
-        hdurl="https://apod.nasa.gov/apod/image/1906/CepheusB_Spitzer_1080.jpg">
-</nasa-article>
-<script src="scripts.js"></script>
-</body>
+    <title>The Web Component</title>
+  </head>
+  <body>
+
+    <nasa-article
+      date="2019-06-11"
+      title="Hello, world"
+      explanation="My explanation"
+      hdurl="https://picsum.photos/4951/3301">
+    </nasa-article>
+
+    <script src="scripts.js"></script>
+    <script>
+      // TODO: fetch data from nasa uri, then create new component
+      // const component = document.createElement( 'nasa-article' )
+      // document.body.appendChild( component )
+    </script>
+  </body>
 </html>
